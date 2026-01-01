@@ -1,0 +1,25 @@
+{
+  "name": "settle-up",
+  "version": "1.0.0",
+  "description": "Splitwise-like expense sharing app - Firebase backend",
+  "scripts": {
+    "start": "cd functions && npm run serve",
+    "deploy": "firebase deploy",
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:rules": "firebase deploy --only firestore:rules",
+    "deploy:indexes": "firebase deploy --only firestore:indexes",
+    "logs": "firebase functions:log",
+    "emulate": "firebase emulators:start --only functions,firestore"
+  },
+  "keywords": [
+    "firebase",
+    "splitwise",
+    "expense-sharing",
+    "cloud-functions"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "firebase-admin": "^13.6.0"
+  }
+}

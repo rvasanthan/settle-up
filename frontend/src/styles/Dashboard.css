@@ -1,0 +1,489 @@
+.dashboard {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h2 {
+  color: var(--text-primary);
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.summary-card {
+  background: var(--surface-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-color);
+}
+
+.summary-card h3 {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.summary-card .amount {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.summary-card .label {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.summary-card.you-owe .amount {
+  color: var(--error-color);
+}
+
+.summary-card.you-are-owed .amount {
+  color: var(--success-color);
+}
+
+.summary-card.net-balance.positive .amount {
+  color: var(--success-color);
+}
+
+.summary-card.net-balance.negative .amount {
+  color: var(--error-color);
+}
+
+.summary-card.net-balance.neutral .amount {
+  color: var(--text-secondary);
+}
+
+.transactions {
+  background: var(--surface-color);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.transaction-group {
+  margin-bottom: 2rem;
+}
+
+.transaction-group:last-child {
+  margin-bottom: 0;
+}
+
+.transaction-group h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 1.1rem;
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.75rem;
+  transition: all 0.2s ease;
+  background: var(--surface-color);
+}
+
+.transaction-item:hover {
+  background: var(--bg-color);
+  border-color: var(--text-secondary);
+}
+
+.transaction-item.owe {
+  border-left: 4px solid var(--error-color);
+}
+
+.transaction-item.owed {
+  border-left: 4px solid var(--success-color);
+}
+
+.transaction-info {
+  flex: 1;
+}
+
+.transaction-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.transaction-description {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.transaction-amount {
+  text-align: right;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.transaction-amount .amount {
+  font-size: 1.1rem;
+  font-weight: 700;
+  min-width: 100px;
+}
+
+.transaction-item.owe .amount {
+  color: var(--error-color);
+}
+
+.transaction-item.owed .amount {
+  color: var(--success-color);
+}
+
+.settle-btn {
+  padding: 0.5rem 1rem;
+  background: var(--surface-color);
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.settle-btn:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+}
+
+.empty-state p:first-child {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-card {
+    padding: 1.5rem;
+  }
+
+  .transaction-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .transaction-amount {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+  }
+}
+
+/* Activity Section */
+.activity-section {
+  margin-top: 3rem;
+}
+
+.activity-section h3 {
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: var(--surface-color);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  transition: all 0.2s;
+}
+
+.activity-item:hover {
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.activity-avatar {
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.user-avatar-small {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border-color);
+}
+
+.user-avatar-placeholder-small {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.activity-info {
+  flex: 1;
+}
+
+.activity-main {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.activity-desc {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.activity-amount {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.activity-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.delete-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background 0.2s;
+  opacity: 1;
+}
+
+.delete-btn:hover {
+  background: #fee2e2;
+  opacity: 1;
+}
+
+.no-activity {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 2rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+}
+
+/* Recent Expenses Horizontal Scroll Section */
+.recent-expenses-section {
+  margin-top: 2.5rem;
+}
+
+.recent-expenses-section h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.expenses-horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding: 0.5rem 0.25rem 1.5rem 0.25rem; /* Bottom padding for scrollbar/shadow */
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.expenses-horizontal-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.expenses-horizontal-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.expenses-horizontal-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 20px;
+}
+
+.expense-thumbnail-card {
+  min-width: 160px;
+  max-width: 160px;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.expense-thumbnail-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-color);
+}
+
+.card-avatar {
+  margin-bottom: 0.75rem;
+}
+
+.user-avatar-medium {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border-color);
+}
+
+.user-avatar-placeholder-medium {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.card-content {
+  width: 100%;
+}
+
+.card-amount {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.card-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 2.4em;
+  line-height: 1.2;
+  width: 100%;
+}
+
+.card-meta {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin-bottom: 0.1rem;
+  font-weight: 500;
+}
+
+.card-split {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  margin-bottom: 0.1rem;
+}
+
+.card-date {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+}
+
+.card-delete-btn {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  opacity: 1; /* Always visible */
+  transition: all 0.2s;
+  z-index: 2;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card-delete-btn:hover {
+  background: #fee2e2;
+  color: #ef4444;
+  transform: scale(1.1);
+  border-color: #fca5a5;
+}

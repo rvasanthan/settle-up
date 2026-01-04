@@ -105,6 +105,57 @@ async function getUser(req, res) {
 }
 
 /**
+ * Update user profile
+ * PUT /auth
+ * Body: { uid, phoneNumber, ... }
+ */
+async function updateUser(req, res) {
+  try {
+    const { uid, phoneNumber } = req.body;
+
+    if (!uid) {
+      return res.status(400).json({
+        success: false,
+        error: 'User ID (uid) is required'
+      });
+    }
+
+    const userRef = db.collection('users').doc(uid);
+    const userDoc = await userRef.get();
+
+    if (!userDoc.exists) {
+      return res.status(404).json({
+        success: false,
+        error: 'User not found'
+      });
+    }
+
+    const updates = {
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+
+    if (phoneNumber) updates.phoneNumber = phoneNumber;
+
+    await userRef.update(updates);
+
+    // Return updated user
+    const updatedDoc = await userRef.get();
+
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully',
+      user: updatedDoc.data()
+    });
+  } catch (error) {
+    console.error('Update user error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+}
+
+/**
  * Search users by displayName or email
  * GET /searchUsers?q=query
  */
@@ -163,4 +214,4 @@ async function searchUsers(req, res) {
   }
 }
 
-module.exports = { registerUser, getUser, searchUsers };
+module.exports = { registerUser, getUser, searchUsers, updateUser };

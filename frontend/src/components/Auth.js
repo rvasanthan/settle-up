@@ -1,6 +1,7 @@
 import React from 'react';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
+import { BsCashStack, BsPeopleFill, BsHouseDoorFill } from 'react-icons/bs';
 import '../styles/Auth.css';
 
 function Auth({ onLogin, loading }) {
@@ -27,7 +28,7 @@ function Auth({ onLogin, loading }) {
       <div className="auth-left">
         <div className="auth-card">
           <div className="auth-header">
-            <div className="logo-icon">💰</div>
+            <img src="/logo.svg" alt="Settle Up Logo" className="auth-logo" style={{ width: '64px', height: '64px', marginBottom: '1rem' }} />
             <h1>Settle-Up</h1>
             <p className="subtitle">Split expenses, settle debts, stress less.</p>
           </div>
@@ -49,15 +50,15 @@ function Auth({ onLogin, loading }) {
 
           <div className="auth-features">
             <div className="feature-item">
-              <div className="feature-icon">💵</div>
+              <div className="feature-icon"><BsCashStack /></div>
               <span>Track</span>
             </div>
             <div className="feature-item">
-              <div className="feature-icon">👫</div>
+              <div className="feature-icon"><BsPeopleFill /></div>
               <span>Split</span>
             </div>
             <div className="feature-item">
-              <div className="feature-icon">🏡</div>
+              <div className="feature-icon"><BsHouseDoorFill /></div>
               <span>Settle</span>
             </div>
           </div>

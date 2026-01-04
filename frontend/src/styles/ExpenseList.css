@@ -22,6 +22,13 @@
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-icon {
+  color: var(--primary-color);
 }
 
 .total-count {
@@ -36,19 +43,21 @@
 }
 
 .expense-card {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
+  background: white;
+  border-radius: var(--radius-xl);
   padding: 1.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid transparent;
   box-shadow: var(--shadow-sm);
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
 .expense-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
   border-color: var(--primary-light);
 }
 
@@ -56,71 +65,95 @@
   display: flex;
   justify-content: space-between;
   align-items: start;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .expense-header h3 {
   color: var(--text-primary);
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 700;
   margin: 0;
+  line-height: 1.4;
 }
 
 .expense-status {
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .expense-status.pending {
-  background: #FEF2F2;
-  color: var(--error);
-  border: 1px solid #FECACA;
+  background: var(--error-bg);
+  color: var(--error-color);
+  border: none;
 }
 
 .expense-status.settled {
-  background: #ECFDF5;
-  color: var(--success);
-  border: 1px solid #A7F3D0;
+  background: var(--success-bg);
+  color: var(--success-color);
+  border: none;
 }
 
 .expense-details {
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px dashed var(--border-color);
 }
 
 .detail-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.35rem 0;
-  font-size: 0.9rem;
+  padding: 0.6rem 0;
+  border-bottom: none;
 }
 
-.detail-row .label {
+.detail-row:last-child {
+  padding-bottom: 0;
+}
+
+.label {
   color: var(--text-secondary);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
   font-weight: 500;
 }
 
-.detail-row .value {
-  color: var(--text-primary);
+.label svg {
+  color: var(--primary-color);
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+.value {
   font-weight: 600;
+  color: var(--text-primary);
 }
 
 .participants-info {
-  margin-bottom: 1.5rem;
+  margin-top: auto;
 }
 
 .participants-title {
-  color: var(--text-secondary);
-  font-size: 0.85rem;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.participants-title svg {
+  color: var(--text-tertiary);
 }
 
 .participants-mini {
@@ -130,34 +163,37 @@
 }
 
 .participant-badge {
-  display: inline-block;
   background: var(--bg-secondary);
-  color: var(--text-primary);
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.8rem;
+  color: var(--text-secondary);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
   font-weight: 500;
-  border: 1px solid var(--border-color);
+  display: inline-flex;
+  align-items: center;
 }
 
 .delete-btn {
-  width: 100%;
-  padding: 0.6rem;
+  margin-top: 1.5rem;
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  font-weight: 500;
-  font-size: 0.9rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-lg);
   cursor: pointer;
+  font-size: 0.9rem;
   transition: all 0.2s;
-  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 500;
 }
 
 .delete-btn:hover {
-  background: #FEF2F2;
-  color: var(--error);
-  border-color: #FECACA;
+  background: var(--error-bg);
+  color: var(--error-color);
+  border-color: transparent;
 }
 
 .empty-state {
@@ -165,9 +201,16 @@
   padding: 4rem 2rem;
   background: var(--bg-card);
   border-radius: var(--radius-lg);
+  border: 2px dashed var(--border-color);
   color: var(--text-secondary);
-  border: 1px dashed var(--border-color);
-  box-shadow: none;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--text-tertiary);
+  display: flex;
+  justify-content: center;
 }
 
 .empty-state p:first-child {

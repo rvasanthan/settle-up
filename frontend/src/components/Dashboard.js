@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/Dashboard.css';
+import { formatDate } from '../utils/dateUtils';
 
 function Dashboard({ userId, apiBase, refreshTrigger }) {
   const [dashboard, setDashboard] = useState(null);
@@ -60,6 +61,29 @@ function Dashboard({ userId, apiBase, refreshTrigger }) {
     }
   };
 
+  const settleTransaction = async (transaction) => {
+    const confirmation = window.confirm(
+      `Are you sure you want to settle $${transaction.amount.toFixed(2)} with ${transaction.to?.name || transaction.personName || 'Unknown'}?`
+    );
+
+    if (!confirmation) return;
+
+    try {
+      const response = await axios.post(`${apiBase}/settleExpense`, {
+        balanceId: transaction.id,
+        userId
+      });
+
+      if (response.data.success) {
+        alert('Transaction settled successfully!');
+        await Promise.all([fetchDashboard(), fetchExpenses()]);
+      }
+    } catch (err) {
+      console.error('Settlement error:', err);
+      alert('Failed to settle transaction: ' + (err.response?.data?.error || err.message));
+    }
+  };
+
   if (loading && !dashboard) {
     return <div className="loading">Loading dashboard...</div>;
   }
@@ -112,8 +136,16 @@ function Dashboard({ userId, apiBase, refreshTrigger }) {
             {data.youOwe.map((transaction, idx) => (
               <div key={idx} className="transaction-item owe">
                 <div className="transaction-info">
-                  <p className="transaction-name">{transaction.personName}</p>
+                  <p className="transaction-name">To: {transaction.to?.name || 'Unknown'}</p>
                   <p className="transaction-description">{transaction.description}</p>
+                  {transaction.createdAt && (
+                    <p className="transaction-date" style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>
+                      {(() => {
+                        const date = transaction.createdAt?.toDate ? transaction.createdAt.toDate() : new Date(transaction.createdAt);
+                        return formatDate(date);
+                      })()}
+                    </p>
+                  )}
                 </div>
                 <div className="transaction-amount">
                   <p className="amount">${transaction.amount.toFixed(2)}</p>
@@ -132,8 +164,16 @@ function Dashboard({ userId, apiBase, refreshTrigger }) {
             {data.youAreOwed.map((transaction, idx) => (
               <div key={idx} className="transaction-item owed">
                 <div className="transaction-info">
-                  <p className="transaction-name">{transaction.personName}</p>
+                  <p className="transaction-name">From: {transaction.from?.name || 'Unknown'}</p>
                   <p className="transaction-description">{transaction.description}</p>
+                  {transaction.createdAt && (
+                    <p className="transaction-date" style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>
+                      {(() => {
+                        const date = transaction.createdAt?.toDate ? transaction.createdAt.toDate() : new Date(transaction.createdAt);
+                        return formatDate(date);
+                      })()}
+                    </p>
+                  )}
                 </div>
                 <div className="transaction-amount">
                   <p className="amount">${transaction.amount.toFixed(2)}</p>
@@ -211,11 +251,6 @@ function Dashboard({ userId, apiBase, refreshTrigger }) {
       )}
     </div>
   );
-
-  function settleTransaction(transaction) {
-    console.log('Settling transaction:', transaction);
-    // This would call the settle endpoint
-  }
 }
 
 export default Dashboard;

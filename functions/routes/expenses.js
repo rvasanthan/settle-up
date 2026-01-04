@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
 const { calculateBalances } = require('../utils/balanceCalculator');
+const { sendExpenseNotification } = require('./notifications');
 
 const db = admin.firestore();
 
@@ -117,6 +118,22 @@ async function createExpense(req, res) {
       await db.collection('balances').add(balanceData);
     }
 
+    // Send notifications asynchronously (don't block response)
+    // We need to fetch user details for notifications
+    try {
+      const userDocs = await Promise.all(allParticipants.map(uid => db.collection('users').doc(uid).get()));
+      const users = userDocs.map(doc => ({ uid: doc.id, ...doc.data() }));
+      const creator = users.find(u => u.uid === createdBy);
+      
+      if (creator) {
+        sendExpenseNotification(expenseData, creator, users).catch(err => 
+          console.error('Notification error:', err)
+        );
+      }
+    } catch (notifyErr) {
+      console.error('Error preparing notifications:', notifyErr);
+    }
+
     res.status(201).json({
       success: true,
       message: 'Expense created successfully',
@@ -136,22 +153,6 @@ async function createExpense(req, res) {
  * Get expenses for a user
  * GET /expenses?userId=userId&groupId=groupId(optional)
  */
-async function getExpenses(req, res) {
-  try {
-    const { userId, groupId } = req.query;
-
-    if (!userId) {
-      return res.status(400).json({
-        success: false,
-        error: 'User ID is required'
-      });
-    }
-
-    // Query expenses where user is a participant (includes creator)
-    // Note: We sort in memory to avoid requiring a composite index for every combination
-    let query = db.collection('expenses').where('participants', 'array-contains', userId);
-
-    if (groupId) {
       query = query.where('groupId', '==', groupId);
     }
 
@@ -329,4 +330,93 @@ async function settleExpense(req, res) {
   }
 }
 
-module.exports = { createExpense, getExpenses, deleteExpense, settleExpense };
+/**
+ * Get single expense details with audit trail
+ * GET /expense?expenseId=expenseId
+ */
+async function getExpense(req, res) {
+  try {
+    const { expenseId } = req.query;
+
+    if (!expenseId) {
+      return res.status(400).json({
+        success: false,
+        error: 'Expense ID is required'
+      });
+    }
+
+    // Get expense document
+    const expenseDoc = await db.collection('expenses').doc(expenseId).get();
+    if (!expenseDoc.exists) {
+      return res.status(404).json({
+        success: false,
+        error: 'Expense not found'
+      });
+    }
+
+    const expenseData = expenseDoc.data();
+    
+    // Get balances (splits) for this expense
+    const balancesSnapshot = await db.collection('balances')
+      .where('expenseId', '==', expenseId)
+      .get();
+
+    const splits = [];
+    const userIds = new Set();
+    
+    // Add creator
+    if (expenseData.createdBy) userIds.add(expenseData.createdBy);
+
+    balancesSnapshot.forEach(doc => {
+      const data = doc.data();
+      splits.push({ id: doc.id, ...data });
+      if (data.payeeId) userIds.add(data.payeeId);
+      if (data.payerId) userIds.add(data.payerId);
+    });
+
+    // Fetch user details
+    const userMap = {};
+    if (userIds.size > 0) {
+      const uniqueUserIds = Array.from(userIds);
+      const userDocs = await Promise.all(uniqueUserIds.map(uid => db.collection('users').doc(uid).get()));
+      
+      userDocs.forEach(doc => {
+        if (doc.exists) {
+          const userData = doc.data();
+          userMap[doc.id] = {
+            displayName: userData.displayName,
+            photoURL: userData.photoURL,
+            email: userData.email
+          };
+        }
+      });
+    }
+
+    // Format response
+    const response = {
+      id: expenseDoc.id,
+      ...expenseData,
+      createdByName: userMap[expenseData.createdBy]?.displayName || 'Unknown',
+      createdByPhoto: userMap[expenseData.createdBy]?.photoURL || null,
+      splits: splits.map(split => ({
+        ...split,
+        payerName: userMap[split.payerId]?.displayName || 'Unknown',
+        payeeName: userMap[split.payeeId]?.displayName || 'Unknown',
+      }))
+    };
+
+    res.status(200).json({
+      success: true,
+      expense: response
+    });
+
+  } catch (error) {
+    console.error('Get expense details error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+}
+
+module.exports = { createExpense, getExpenses, getExpense, deleteExpense, settleExpense };

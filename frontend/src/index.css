@@ -25,6 +25,7 @@
   --bg-main: #F8FAFC; /* Slate 50 */
   --bg-card: #FFFFFF;
   --bg-secondary: #F1F5F9; /* Slate 100 */
+  --bg-gradient: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
   
   /* Aliases */
   --bg-color: var(--bg-main);
@@ -38,15 +39,16 @@
   --border-color: #E2E8F0; /* Slate 200 */
   
   /* Spacing & Layout */
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
   
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
+  --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
 }
 
 * {
@@ -62,8 +64,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg-color);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
   color: var(--text-primary);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 h1, h2, h3, h4, h5, h6 {

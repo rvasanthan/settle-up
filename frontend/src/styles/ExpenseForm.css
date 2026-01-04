@@ -14,45 +14,48 @@
 }
 
 .expense-form-card {
-  background: var(--surface-color);
-  border-radius: var(--radius-md);
-  padding: 2rem;
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
   max-width: 600px;
   margin: 0 auto;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-xl);
+  border: none;
   position: relative;
 }
 
 .close-modal-btn {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: transparent;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: var(--bg-secondary);
   border: none;
-  font-size: 2rem;
+  font-size: 1.5rem;
   line-height: 1;
   color: var(--text-secondary);
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 0;
   border-radius: 50%;
   transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
 }
 
 .close-modal-btn:hover {
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
+  background-color: var(--error-bg);
+  color: var(--error-color);
+  transform: rotate(90deg);
 }
 
 .expense-form-card h2 {
   color: var(--text-primary);
-  margin-bottom: 1.5rem;
-  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .error-message {
@@ -66,15 +69,17 @@
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
-  color: var(--text-primary);
-  font-weight: 500;
-  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .form-group.relative {
@@ -267,57 +272,54 @@
   background: var(--primary-color);
   color: white;
   border: none;
-  border-radius: var(--radius-sm);
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: var(--radius-full);
+  font-size: 1.1rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
-  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-lg);
+  margin-top: 1rem;
 }
 
-.submit-btn:hover:not(:disabled) {
+.submit-btn:hover {
   background: var(--primary-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
 }
 
 .submit-btn:disabled {
-  opacity: 0.7;
+  background: var(--text-tertiary);
   cursor: not-allowed;
-  background: var(--secondary-color);
+  transform: none;
+  box-shadow: none;
 }
 
 .form-help {
-  background: #EFF6FF;
-  border: 1px solid #DBEAFE;
+  margin-top: 2.5rem;
   padding: 1.5rem;
-  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border-color);
 }
 
 .form-help h4 {
-  color: #1E40AF;
+  color: var(--text-primary);
   margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 1rem;
 }
 
 .form-help ul {
-  list-style: none;
-  color: #1E3A8A;
-  font-size: 0.9rem;
-}
-
-.form-help li {
-  padding: 0.5rem 0;
   padding-left: 1.5rem;
-  position: relative;
-}
-
-.form-help li::before {
-  content: '•';
-  position: absolute;
-  left: 0;
-  color: var(--primary-color);
-  font-weight: bold;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
 }
 
 @media (max-width: 600px) {

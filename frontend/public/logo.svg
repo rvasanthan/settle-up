@@ -1,0 +1,20 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  
+  <rect width="512" height="512" rx="128" fill="url(#bg-gradient)"/>
+  
+  <!-- Stylized S / Money Symbol -->
+  <g filter="url(#shadow)">
+    <path d="M320 160H192C174.327 160 160 174.327 160 192C160 209.673 174.327 224 192 224H320C337.673 224 352 238.327 352 256C352 273.673 337.673 288 320 288H192" stroke="white" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M256 112V160" stroke="white" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M256 288V336" stroke="white" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { BsCheckLg, BsLightbulb } from 'react-icons/bs';
 import '../styles/ExpenseForm.css';
 
 function ExpenseForm({ userId, apiBase, onSuccess, onCancel }) {
@@ -468,13 +469,13 @@ function ExpenseForm({ userId, apiBase, onSuccess, onCancel }) {
               Cancel
             </button>
             <button type="submit" className="submit-btn" disabled={loading}>
-              {loading ? 'Creating...' : '✅ Create Expense'}
+              {loading ? 'Creating...' : <><BsCheckLg /> Create Expense</>}
             </button>
           </div>
         </form>
 
         <div className="form-help">
-          <h4>💡 How it works:</h4>
+          <h4><BsLightbulb /> How it works:</h4>
           <ul>
             <li>Select who paid the expense ("Paid By")</li>
             <li>Add all participants involved</li>

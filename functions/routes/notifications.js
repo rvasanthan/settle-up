@@ -1,8 +1,22 @@
 const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
 const functions = require('firebase-functions');
+const twilio = require('twilio');
 
 const db = admin.firestore();
+
+// Configure Twilio client for SMS
+const getTwilioClient = () => {
+  const twilioConfig = functions.config().twilio;
+  if (twilioConfig && twilioConfig.account_sid && twilioConfig.auth_token && twilioConfig.from) {
+    return {
+      client: twilio(twilioConfig.account_sid, twilioConfig.auth_token),
+      from: twilioConfig.from
+    };
+  }
+  console.log('No Twilio config found. SMS notifications are disabled.');
+  return null;
+};
 
 // Configure transporter
 // In production, set these config variables using:
@@ -181,43 +195,62 @@ function generateEmailContent(userName, expenses, startDate, endDate) {
  */
 async function sendExpenseNotification(expense, creator, participants) {
   const transporter = getTransporter();
+  const twilioClient = getTwilioClient();
   
   const notifications = participants.map(async (participant) => {
     // Skip if participant is the creator or has no email
-    if (participant.uid === creator.uid || !participant.email) return;
+    if (participant.uid === creator.uid) return;
 
-    const mailOptions = {
-      from: '"Settle Up" <noreply@settleup.app>',
-      to: participant.email,
-      subject: `New Expense: ${expense.description}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-          <h2 style="color: #4f46e5;">New Expense Added</h2>
-          <p><strong>${creator.displayName || 'Someone'}</strong> added you to an expense.</p>
-          
-          <div style="background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="margin: 0 0 10px 0;">${expense.description}</h3>
-            <p style="margin: 5px 0; font-size: 18px; font-weight: bold;">${expense.currency} ${expense.amount}</p>
-            <p style="margin: 5px 0; color: #64748b;">${new Date(expense.date).toLocaleDateString()}</p>
+    const sendEmailPromise = async () => {
+      if (!participant.email) return null;
+
+      const mailOptions = {
+        from: '"Settle Up" <noreply@settleup.app>',
+        to: participant.email,
+        subject: `New Expense: ${expense.description}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+            <h2 style="color: #4f46e5;">New Expense Added</h2>
+            <p><strong>${creator.displayName || 'Someone'}</strong> added you to an expense.</p>
+            
+            <div style="background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="margin: 0 0 10px 0;">${expense.description}</h3>
+              <p style="margin: 5px 0; font-size: 18px; font-weight: bold;">${expense.currency} ${expense.amount}</p>
+              <p style="margin: 5px 0; color: #64748b;">${new Date(expense.date).toLocaleDateString()}</p>
+            </div>
+
+            <p>Log in to the app to see the full details and settle up.</p>
+            
+            <p style="margin-top: 30px; color: #94a3b8; font-size: 12px;">
+              Settle Up App Notification
+            </p>
           </div>
+        `
+      };
 
-          <p>Log in to the app to see the full details and settle up.</p>
-          
-          <p style="margin-top: 30px; color: #94a3b8; font-size: 12px;">
-            Settle Up App Notification
-          </p>
-        </div>
-      `
-    };
-
-    try {
       const info = await transporter.sendMail(mailOptions);
       console.log(`Notification sent to ${participant.email}: ${info.messageId}`);
       return info;
-    } catch (error) {
-      console.error(`Failed to send notification to ${participant.email}:`, error);
-      return null;
-    }
+    };
+
+    const sendSmsPromise = async () => {
+      if (!twilioClient || !participant.phoneNumber) return null;
+      try {
+        const body = `${creator.displayName || 'Someone'} added an expense: ${expense.description} for ${expense.currency} ${expense.amount}. View details in Settle Up.`;
+        const resp = await twilioClient.client.messages.create({
+          body,
+          from: twilioClient.from,
+          to: participant.phoneNumber
+        });
+        console.log(`SMS sent to ${participant.phoneNumber}: ${resp.sid}`);
+        return resp;
+      } catch (err) {
+        console.error(`Failed to send SMS to ${participant.phoneNumber}:`, err);
+        return null;
+      }
+    };
+
+    return Promise.all([sendEmailPromise(), sendSmsPromise()]);
   });
 
   await Promise.all(notifications);

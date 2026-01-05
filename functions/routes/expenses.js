@@ -153,6 +153,20 @@ async function createExpense(req, res) {
  * Get expenses for a user
  * GET /expenses?userId=userId&groupId=groupId(optional)
  */
+async function getExpenses(req, res) {
+  try {
+    const { userId, groupId } = req.query;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        error: 'User ID is required'
+      });
+    }
+
+    // Pull expenses where the user participates; optionally filter by group
+    let query = db.collection('expenses').where('participants', 'array-contains', userId);
+    if (groupId) {
       query = query.where('groupId', '==', groupId);
     }
 

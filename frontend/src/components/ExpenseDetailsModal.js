@@ -15,6 +15,7 @@ function ExpenseDetailsModal({ isOpen, onClose, expenseId, apiBase }) {
     } else {
       setDetails(null); // Reset when closed
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, expenseId]);
 
   const fetchDetails = async () => {

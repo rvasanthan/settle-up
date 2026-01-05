@@ -38,32 +38,33 @@
   align-items: center;
   text-align: center;
   margin-bottom: 2rem;
-  position: relative;
 }
 
 .modal-close {
   position: absolute;
-  top: -1rem;
-  right: -1rem;
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  color: var(--text-secondary);
+  top: 1rem;
+  right: 1rem;
+  background: white;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  color: #64748b;
   cursor: pointer;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .modal-close:hover {
-  background-color: white;
+  background-color: #fee2e2;
   color: var(--error-color);
+  border-color: var(--error-color);
   transform: rotate(90deg);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.2);
 }
 
 .modal-title {
@@ -193,6 +194,14 @@
 .audit-amount.owe {
   color: var(--error-color);
   background: rgba(239, 68, 68, 0.08);
+}
+
+.audit-amount.settled {
+  color: var(--success-color);
+  background: rgba(16, 185, 129, 0.12);
+  text-decoration: line-through;
+  text-decoration-color: var(--success-color);
+  text-decoration-thickness: 1.5px;
 }
 
 .audit-amount.paid {

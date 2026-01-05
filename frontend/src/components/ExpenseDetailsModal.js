@@ -102,9 +102,25 @@ function ExpenseDetailsModal({ isOpen, onClose, expenseId, apiBase }) {
                         <div className="audit-details">
                           <span className="audit-name">{split.payeeName}</span>
                           <span className="audit-role">Owes {split.payerName}</span>
+                          {split.settled && split.settledAt && (
+                            <span className="settlement-status" style={{ 
+                              display: 'block', 
+                              fontSize: '0.8rem', 
+                              color: '#10b981',
+                              marginTop: '0.25rem'
+                            }}>
+                              ✓ Settled {(() => {
+                                const seconds = split.settledAt._seconds || split.settledAt.seconds;
+                                if (seconds) {
+                                  return formatDate(new Date(seconds * 1000));
+                                }
+                                return formatDate(new Date(split.settledAt));
+                              })()}
+                            </span>
+                          )}
                         </div>
                       </div>
-                      <span className="audit-amount owe">
+                      <span className={`audit-amount ${split.settled ? 'settled' : 'owe'}`}>
                         {split.currency} {split.amount}
                       </span>
                     </div>

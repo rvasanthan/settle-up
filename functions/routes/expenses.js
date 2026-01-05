@@ -303,11 +303,19 @@ async function settleExpense(req, res) {
 
     const balance = balanceDoc.data();
 
-    // Only payer can settle
-    if (balance.payerId !== userId) {
+    // Prevent double-settlement
+    if (balance.settled) {
+      return res.status(400).json({
+        success: false,
+        error: 'This balance is already settled'
+      });
+    }
+
+    // Allow either payer (who is owed) or payee (who owes) to mark as settled
+    if (balance.payerId !== userId && balance.payeeId !== userId) {
       return res.status(403).json({
         success: false,
-        error: 'Only payer can settle this expense'
+        error: 'Only participants of this expense can settle it'
       });
     }
 

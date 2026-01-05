@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/Dashboard.css';
 import { formatDate } from '../utils/dateUtils';
+import ExpenseDetailsModal from './ExpenseDetailsModal';
 
 function Dashboard({ userId, apiBase, refreshTrigger }) {
   const [dashboard, setDashboard] = useState(null);
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedExpense, setSelectedExpense] = useState(null);
 
   useEffect(() => {
     fetchDashboard();
@@ -62,8 +64,9 @@ function Dashboard({ userId, apiBase, refreshTrigger }) {
   };
 
   const settleTransaction = async (transaction) => {
+    const counterpart = transaction.to?.name || transaction.from?.name || transaction.personName || 'Unknown person';
     const confirmation = window.confirm(
-      `Are you sure you want to settle $${transaction.amount.toFixed(2)} with ${transaction.to?.name || transaction.personName || 'Unknown'}?`
+      `Are you sure you want to mark $${transaction.amount.toFixed(2)} as settled with ${counterpart}?`
     );
 
     if (!confirmation) return;
@@ -177,6 +180,9 @@ function Dashboard({ userId, apiBase, refreshTrigger }) {
                 </div>
                 <div className="transaction-amount">
                   <p className="amount">${transaction.amount.toFixed(2)}</p>
+                  <button className="settle-btn" onClick={() => settleTransaction(transaction)}>
+                    Settle
+                  </button>
                 </div>
               </div>
             ))}
@@ -197,7 +203,12 @@ function Dashboard({ userId, apiBase, refreshTrigger }) {
           <h3>Recent Expenses</h3>
           <div className="expenses-horizontal-scroll">
             {expenses.map((expense) => (
-              <div key={expense.id} className="expense-thumbnail-card">
+              <div 
+                key={expense.id} 
+                className="expense-thumbnail-card"
+                onClick={() => setSelectedExpense(expense.id)}
+                style={{ cursor: 'pointer' }}
+              >
                 {expense.createdBy === userId && !expense.settled && (
                   <button 
                     className="card-delete-btn"
@@ -249,6 +260,13 @@ function Dashboard({ userId, apiBase, refreshTrigger }) {
           </div>
         </div>
       )}
+
+      <ExpenseDetailsModal 
+        isOpen={selectedExpense !== null}
+        onClose={() => setSelectedExpense(null)}
+        expenseId={selectedExpense}
+        apiBase={apiBase}
+      />
     </div>
   );
 }
